@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Editor HTML Anti-Lag</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    textarea {
+      height: 50%;
+      width: 100%;
+      resize: none;
+      font-family: monospace;
+      font-size: 14px;
+      padding: 10px;
+      box-sizing: border-box;
+      border: none;
+      outline: none;
+    }
+
+    button {
+      height: 40px;
+      font-size: 15px;
+      background: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:active {
+      background: #218838;
+    }
+
+    iframe {
+      flex-grow: 1;
+      border: none;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <textarea id="editor" placeholder="Escribe o pega tu HTML aquí..."></textarea>
+  <button id="run">▶ Ejecutar</button>
+  <iframe id="preview" sandbox="allow-same-origin allow-scripts"></iframe>
+
+  <script>
+    const editor = document.getElementById('editor');
+    const preview = document.getElementById('preview');
+    const runBtn = document.getElementById('run');
+
+    runBtn.addEventListener('click', () => {
+      const htmlCode = editor.value;
+
+      // Espera 100ms antes de escribir para evitar freeze
+      setTimeout(() => {
+        try {
+          const doc = preview.contentDocument || preview.contentWindow.document;
+          doc.open();
+          doc.write(htmlCode);
+          doc.close();
+        } catch (e) {
+          alert('Error al cargar el código. Revisa si hay errores en el HTML.');
+        }
+      }, 100);
+    });
+
+    // Carga inicial de ejemplo
+    editor.value = `<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ejemplo</title>
+  </head>
+  <body>
+    <h1>Bienvenido</h1>
+    <p>Este editor está optimizado para código largo.</p>
+  </body>
+</html>`;
+  </script>
+
+</body>
+</html>
